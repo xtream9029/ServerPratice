@@ -1,0 +1,109 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ServerCore
+{
+    class EventLock
+    {
+        //스핀락에 비교했을때 왜느려졌을까??--> 커널모드까지 내려가서 작업하기때문에 그에따른 오버헤드가 증가한다.
+        AutoResetEvent _available = new AutoResetEvent(true);//문이 열려있는 상태
+        public void Acquire()
+        {
+            _available.WaitOne();//_available값을 false로 바꿈
+        }
+
+        public void Release()
+        {
+            _available.Set();
+        }
+    }
+
+    class Wrong_SpinLock
+    {
+        //락을 풀고 잠그는 과정과 잠그고 푸는 과정이 하나의 동작으로 이루어 지지 않고 있기 때문에
+        //이 락은 제대로 동작하지 않음
+        volatile bool _locked = false;
+
+        public void Acquire()
+        {
+            while (_locked)
+            {
+
+            }
+            _locked = true;
+        }
+
+        public void Release()
+        {
+            _locked = false;
+        }
+    }
+
+    class SpinLock
+    {
+        //클래스는 참조형식
+        volatile int _locked = 0;
+
+        public void Acquire()
+        {
+            while (true)
+            {
+                //다른 쓰레드가 이미 락을 얻은 상태여서 기다리는 부분
+                //락을 풀고 잠그는 이 과정 하나도 원자적 동작으로 이루어져야함
+                int expected = 0;//내가 예상한 값 즉 현재 락이 비어있을 거라는 예상
+                int desired = 1;//락을 얻길 원하기 때문에 1값으로 바꿔준다는 의미
+                if (Interlocked.CompareExchange(ref _locked, desired, expected) == expected) break;//락을 획득함
+            }//while
+        }
+         
+        public void Release()
+        {
+            _locked = 0;
+        }
+    }//SpinLock
+   
+    class Program
+    {
+        static int num = 0;//Critical Section
+        static SpinLock _lock = new SpinLock();
+        static Wrong_SpinLock w_lock = new Wrong_SpinLock();
+        static EventLock eventLock = new EventLock();
+
+        //커널을 이용해서 순서를 맞추는 락??
+        static Mutex _mutex = new Mutex();
+
+        //모니터 락
+        static void Thread_1()
+        {
+            for(int i = 0; i < 10000; i++)
+            {
+                _mutex.WaitOne();
+                num++;
+                _mutex.ReleaseMutex();
+            }
+        }
+
+        static void Thread_2()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                _mutex.WaitOne();
+                num--;
+                _mutex.ReleaseMutex();
+            }
+        }
+
+        static void Main()
+        {
+            Task t1 = new Task(Thread_1);
+            Task t2 = new Task(Thread_2);
+
+            t1.Start();
+            t2.Start();
+
+            Task.WaitAll(t1, t2);
+            Console.WriteLine(num);
+        }//Main Thread(주 쓰레드)
+    }//Class Program
+}

@@ -1,0 +1,13 @@
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.exe
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.deps.json
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.runtimeconfig.json
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.runtimeconfig.dev.json
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.dll
+D:\서버실습\Server\DummyClient\bin\Debug\netcoreapp3.1\DummyClient.pdb
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.csprojAssemblyReference.cache
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.AssemblyInfoInputs.cache
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.AssemblyInfo.cs
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.csproj.CoreCompileInputs.cache
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.dll
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.pdb
+D:\서버실습\Server\DummyClient\obj\Debug\netcoreapp3.1\DummyClient.genruntimeconfig.cache
